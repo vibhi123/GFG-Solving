@@ -8,22 +8,19 @@ class Solution {
   public:
     vector<int> subarraySum(vector<int> &arr, int target) {
         // code here
+        int sum =0;
         
-       for(int i =0 ; i< arr.size();i++)
-       {   
-           int sum =0 ;
-           for( int  j = i ; j< arr.size();j++)
-           {
-                sum= sum + arr[j];
+        for(int i = 0 ; i < arr.size();i++)
+        {
+            int sum =0;
+            for( int j=i ; j < arr.size();j++)
+            {
+                sum = sum+arr[j];
                 
-                if ( sum == target)
-                {
-                   return { i+1, j+1};
-                }
-                if ( sum>target)
-                break;
-           }
-       }
+                if( sum== target )
+                return{i+1,j+1};
+            }
+        }
         return {-1};
     }
 };
@@ -33,13 +30,13 @@ class Solution {
 int main() {
     int t;
     cin >> t;
-    cin.ignore(); // Ignore the newline character after t
+    cin.ignore();
     while (t--) {
         vector<int> arr;
         int d;
         string input;
 
-        getline(cin, input); // Read the entire line for the array elements
+        getline(cin, input);
         stringstream ss(input);
         int number;
         while (ss >> number) {
@@ -47,7 +44,7 @@ int main() {
         }
 
         cin >> d;
-        cin.ignore(); // Ignore the newline character after d
+        cin.ignore();
 
         Solution ob;
         vector<int> result = ob.subarraySum(arr, d);
