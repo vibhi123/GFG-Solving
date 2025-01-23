@@ -1,12 +1,8 @@
 //{ Driver Code Starts
-//Initial Template for C++
-
-
 #include <bits/stdc++.h>
 using namespace std;
 
-
-// Tree Node
+// Tree Node structure
 struct Node {
     int data;
     Node* left;
@@ -14,71 +10,47 @@ struct Node {
 };
 
 // Utility function to create a new Tree Node
-Node* newNode(int val) {
+Node* createNode(int value) {
     Node* temp = new Node;
-    temp->data = val;
-    temp->left = NULL;
-    temp->right = NULL;
-
+    temp->data = value;
+    temp->left = nullptr;
+    temp->right = nullptr;
     return temp;
 }
 
-
-// Function to Build Tree
+// Function to build a tree from a string representation
 Node* buildTree(string str) {
-    // Corner Case
-    if (str.length() == 0 || str[0] == 'N') return NULL;
+    if (str.empty() || str[0] == 'N')
+        return nullptr;
 
-    // Creating vector of strings from input
-    // string after spliting by space
-    vector<string> ip;
-
+    vector<string> nodeValues;
     istringstream iss(str);
-    for (string str; iss >> str;) ip.push_back(str);
+    for (string s; iss >> s;)
+        nodeValues.push_back(s);
 
-    // Create the root of the tree
-    Node* root = newNode(stoi(ip[0]));
+    Node* root = createNode(stoi(nodeValues[0]));
+    queue<Node*> nodeQueue;
+    nodeQueue.push(root);
 
-    // Push the root to the queue
-    queue<Node*> queue;
-    queue.push(root);
+    size_t i = 1;
+    while (!nodeQueue.empty() && i < nodeValues.size()) {
+        Node* currentNode = nodeQueue.front();
+        nodeQueue.pop();
 
-    // Starting from the second element
-    int i = 1;
-    while (!queue.empty() && i < ip.size()) {
-
-        // Get and remove the front of the queue
-        Node* currNode = queue.front();
-        queue.pop();
-
-        // Get the current node's value from the string
-        string currVal = ip[i];
-
-        // If the left child is not null
-        if (currVal != "N") {
-
-            // Create the left child for the current node
-            currNode->left = newNode(stoi(currVal));
-
-            // Push it to the queue
-            queue.push(currNode->left);
+        string leftValue = nodeValues[i++];
+        if (leftValue != "N") {
+            currentNode->left = createNode(stoi(leftValue));
+            nodeQueue.push(currentNode->left);
         }
 
-        // For the right child
-        i++;
-        if (i >= ip.size()) break;
-        currVal = ip[i];
+        if (i >= nodeValues.size())
+            break;
 
-        // If the right child is not null
-        if (currVal != "N") {
-
-            // Create the right child for the current node
-            currNode->right = newNode(stoi(currVal));
-
-            // Push it to the queue
-            queue.push(currNode->right);
+        string rightValue = nodeValues[i++];
+        if (rightValue != "N") {
+            currentNode->right = createNode(stoi(rightValue));
+            nodeQueue.push(currentNode->right);
         }
-        i++;
     }
 
     return root;
@@ -93,7 +65,7 @@ struct Node
     int data;
     struct Node* left;
     struct Node* right;
-    
+
     Node(int x){
         data = x;
         left = right = NULL;
@@ -101,51 +73,53 @@ struct Node
 };
  */
 
-class Solution{
-    public:
-    
-    int height(Node* root) {
-        if (root == NULL)
+class Solution {
+  public:
+    // Function to check whether a binary tree is balanced or not.
+    int bal(Node* node)
+    {
+        if(node == NULL )
+        {
             return 0;
-        int left = height(root->left);
-        int right = height(root->right);
-        return max(left, right) + 1;
+        }
+        int l = bal(node->left);
+        int r= bal(node->right);
+        
+        if(l==-1 || r==-1 || abs(l-r)>1)
+        return -1;
+        
+        return max(l,r)+1;
     }
-
     bool isBalanced(Node* root) {
-        if (root == NULL)
-            return true;
-        bool left = isBalanced(root->left);
-        bool right = isBalanced(root->right);
-        bool diff = abs(height(root->left) - height(root->right)) <= 1;
-        if (left && right && diff)
-            return true;
-        else 
-            return false;
+        // Code here
+        if(bal(root)==-1)
+        return false;
+        
+        return true;
     }
-    //Function to check whether a binary tree is balanced or not.
 };
 
 
 //{ Driver Code Starts.
 
-/* Driver program to test size function*/
-
-  
-
 int main() {
+    int testCases;
+    cin >> testCases;
+    cin.ignore(); // Ignore the newline after the number of test cases
 
-   
-    int t;
-    scanf("%d ", &t);
-    while (t--) {
-        string s, ch;
-        getline(cin, s);
-        
-        Node* root = buildTree(s);
-        Solution ob;
-        cout << ob.isBalanced(root) << endl;
+    while (testCases--) {
+        string treeInput;
+        getline(cin, treeInput);
+
+        Node* root = buildTree(treeInput);
+        Solution solution;
+        bool result = solution.isBalanced(root);
+
+        // Output "true" or "false"
+        cout << (result ? "true" : "false") << endl;
+        cout << "~" << endl;
     }
+
     return 0;
 }
 
